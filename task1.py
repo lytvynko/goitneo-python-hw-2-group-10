@@ -4,6 +4,10 @@ def input_error(func):
             return func(*args, **kwargs)
         except ValueError:
             return "Give me name and phone please."
+        except KeyError as e:
+            return f"KeyError: {str(e)}"
+        except Exception as e:
+            return f"An error occurred: {str(e)}"    
 
     return inner
 
@@ -12,11 +16,13 @@ def parse_input(user_input):
     cmd = cmd.strip().lower()
     return cmd, *args
 
+@input_error
 def add_contact(args, contacts):
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
+@input_error
 def change_username_phone(args, contacts):
     name, phone = args
     if name in contacts:
@@ -25,6 +31,7 @@ def change_username_phone(args, contacts):
     else:
         return f"Contact {name} does not exist."
 
+@input_error
 def get_username_phone(args, contacts):
     name = args[0]
     if name in contacts:
@@ -32,6 +39,7 @@ def get_username_phone(args, contacts):
     else:
         return f"Contact {name} does not exist."
 
+@input_error
 def show_all_contacts(contacts):
     if contacts:
         contact = ''
